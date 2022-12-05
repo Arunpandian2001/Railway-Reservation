@@ -9,7 +9,14 @@ public class Passenger implements Serializable{
 	private String name;
 	private String gender;
 	private String preference; 
+	private String seatNumber;
 	
+	public String getSeatNumber() {
+		return seatNumber;
+	}
+	public void setSeatNumber(String seatNumber) {
+		this.seatNumber = seatNumber;
+	}
 	public String getGender() {
 		return gender;
 	}

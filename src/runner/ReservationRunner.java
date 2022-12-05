@@ -70,7 +70,11 @@ public class ReservationRunner {
 					loginLoop=false;
 					passwordLoop=false;
 					UserRunner userRunner=new UserRunner(id);
-					userRunner.userLayer();
+					try {
+						userRunner.userLayer();
+					} catch (CustomException e) {
+						logger.warning(e+"");
+					}
 				}else {
 					logger.warning("Enter valid details");
 				}

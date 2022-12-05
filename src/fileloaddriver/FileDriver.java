@@ -30,6 +30,20 @@ public class FileDriver implements PersistentLayerPathway{
 		}
 	}
 	
+	private <T,V>void updateFile(String fileName,int number) throws CustomException  {
+		
+		try(FileOutputStream fileWrite=new FileOutputStream(fileName);
+			ObjectOutputStream objectOutputStream=new ObjectOutputStream(fileWrite);){
+			
+			objectOutputStream.writeObject(number);
+			
+		} catch (FileNotFoundException e) {
+			throw new CustomException("The given file name is not found",e);
+		} catch (IOException e) {
+			throw new CustomException("The given file caused IO exception",e);
+		}
+	}
+	
 	private Object getFromFile(String fileName) throws CustomException  {
 		
 		Object map = null;
@@ -48,8 +62,9 @@ public class FileDriver implements PersistentLayerPathway{
 		return map;
 	}
 	
+	
 	@Override
-	public void saveUserDetails(User user,Map<Integer,String> userDetails) throws CustomException {
+	public void saveUserDetails(Map<Integer,User> userDetails) throws CustomException {
 		
 		String fileName="UserCredentials_RailwayReservation.ser";
 		
@@ -65,6 +80,13 @@ public class FileDriver implements PersistentLayerPathway{
 		updateFile(fileName,bookingDetails);
 	}
 	
+	@Override
+	public void setPNRNumber(int pnrNumber) throws CustomException {
+		// TODO Auto-generated method stub
+		
+		String fileName="LastPNRNumber_RailwayReservation.ser";
+		updateFile(fileName,pnrNumber);
+	}
 	
 	
 	@SuppressWarnings("unchecked")
@@ -84,6 +106,15 @@ public class FileDriver implements PersistentLayerPathway{
 		
 		return (Map<Integer, Ticket>) getFromFile(fileName);
 	}
+
+	@Override
+	public int getPNRNumber() throws CustomException {
+		// TODO Auto-generated method stub
+		String fileName="LastPNRNumber_RailwayReservation.ser";
+		
+		return (int) getFromFile(fileName);
+	}
+
 
 	
 	
