@@ -6,11 +6,11 @@ public class Train implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	public static int upper=5;
-	public static int lower=5;
-	public static int middle=5;
-	public static int rac=5;
-	
+	public static int total=20;
+	public static int upper=total/4;
+	public static int lower=total/4;
+	public static int middle=total/4;
+	public static int rac=total/4;
 	
 	public static int trainNumber=21;
 	public static String trainName="Meenakshi Selvam Express";

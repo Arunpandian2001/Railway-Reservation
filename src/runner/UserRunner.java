@@ -34,8 +34,13 @@ public class UserRunner {
 			
 				case 1:{
 					Ticket ticket=bookTicket();
-					logger.info("Ticket booked Successfully");
-					printTicket(ticket);
+					if(ticket==null) {
+						loop=false;
+						break;
+					}else {
+						logger.info("Ticket booked Successfully");
+						printTicket(ticket);
+					}
 					
 					break;
 				}
@@ -105,6 +110,10 @@ public class UserRunner {
 		
 		logger.info("Enter the number of passengers ");
 		passengers=input.isInteger();
+		if(Train.total-passengers<0) {
+			logger.warning("Insufficient tickets for required number of passengers");
+			return null;
+		}
 		
 		List<Passenger> passengersList=new ArrayList<>();
 		for(int i=0;i<passengers;i++) {
@@ -115,7 +124,40 @@ public class UserRunner {
 			pass.setAge(input.isInteger());
 			logger.info("Enter gender (If male enter 'M' if woman enter 'W' if Transgender enter 'T'):: ");
 			pass.setGender(input.getString());
-
+			boolean preferenceLoop=true;
+			String pref="";
+			while(preferenceLoop) {
+				if(Train.lower>0 && Train.middle>0 && Train.upper>0) {
+					logger.info("Available Preference  (Upper - U | Middle - M | Lower -L)::");
+					pref=input.getString();
+					if((pref.equalsIgnoreCase("U") || pref.equalsIgnoreCase("M") || pref.equalsIgnoreCase("L") )) {
+						preferenceLoop=false;
+					}
+				}else if(Train.middle>0 && Train.upper>0) {
+					logger.info("Available Preference  (Upper - U | Middle - M)::");
+					pref=input.getString();
+					if((pref.equalsIgnoreCase("U") || pref.equalsIgnoreCase("M") )) {
+						preferenceLoop=false;
+					}
+				}else if(Train.upper>0) {
+					logger.info("Available Preference  (Upper - U )::");
+					pref=input.getString();
+					if((pref.equalsIgnoreCase("U"))) {
+						preferenceLoop=false;
+					}
+				}else if(Train.rac>0) {
+					logger.info("Rac is allocated");
+					pref="RAC";
+					preferenceLoop=false;
+				}else {
+					logger.warning("No tickets Available");
+					preferenceLoop=false;
+					return null;
+				}
+			}
+			countTickets(pref);
+			pass.setPreference(pref);
+			pass.setSeatNumber(allocateSeatNumber(pref));
 			passengersList.add(pass);
 		}
 		String classType="";
@@ -144,18 +186,7 @@ public class UserRunner {
 		int pnrNumber=Storage.VALUES.getPnrNumber();
 		
 		Ticket ticket=new Ticket();
-		if(Train.lower!=0) {
-			ticket.setPreference("L");
-		}
-		else if(Train.middle!=0) {
-			ticket.setPreference("M");
-		}
-		else if(Train.upper!=0) {
-			ticket.setPreference("U");
-		}
-		else if(Train.rac!=0) {
-			ticket.setPreference("RAC");
-		}
+		
 		ticket.setPnrNumber(pnrNumber);
 		ticket.setClassType(classType);
 		ticket.setPassengersList(passengersList);
@@ -165,10 +196,44 @@ public class UserRunner {
 		ticket.setTo(Train.to);
 		ticket.setDate(Train.date);
 		
-		operation.bookTicket(ticket,passengers);
-		
-		return ticket;
+		return operation.bookTicket(ticket,passengers);
 
+	}
+	
+	private String allocateSeatNumber(String pref) {
+		// TODO Auto-generated method stub
+		if(pref.equalsIgnoreCase("L")) {
+			return "L"+(5-Train.lower);
+		}
+		else if(pref.equalsIgnoreCase("M")) {
+			return "M"+(5-Train.middle);
+		}
+		else if(pref.equalsIgnoreCase("U")) {
+			return "U"+(5-Train.upper);
+		}
+		else if(pref.equalsIgnoreCase("RAC")) {
+			return "RAC"+(5-Train.rac);
+		} 
+		return null;
+	}
+	
+	private void countTickets(String pref) {
+		if(pref.equalsIgnoreCase("L") && Train.lower>0) {
+			Train.lower--;
+			Train.total--;
+		}
+		else if(pref.equalsIgnoreCase("M") && Train.middle>0) {
+			Train.middle--;
+			Train.total--;
+		}
+		else if(pref.equalsIgnoreCase("U") && Train.upper>0) {
+			Train.upper--;
+			Train.total--;
+		}
+		else if(pref.equalsIgnoreCase("RAC") && Train.rac>0) {
+			Train.rac--;
+			Train.total--;
+		}
 	}
 	
 	private boolean isPNRNumberValid(int pnrNumber) throws CustomException {
@@ -186,16 +251,12 @@ public class UserRunner {
 		 System.out.println("+ Date         :: "+ticket.getDate()+"                                         +");
 		 System.out.println("+ From         :: "+ticket.getFrom()+"                                         +");
 		 System.out.println("+ To           :: "+ticket.getTo()+"                                           +");
-		 if(ticket.getPassengersList().size()>1) {
-			 System.out.println("+ Seat number           :: "+ticket.getStart()+"-"+ticket.getEnd()+"                                       +");
-		 }else {
-			 System.out.println("+ Seat number           :: "+ticket.getStart()+"                                           +");
-		 }
+		 
 		 System.out.println("+ Passengers   Name          Age         Gender           +");
 
 		 List<Passenger> list=ticket.getPassengersList();
 		 list.forEach(s->{
-			 System.out.println("+ "+s.getName()+"        "+s.getAge()+"              "+s.getGender()+"+");
+			 System.out.println("+ "+s.getName()+"        "+s.getAge()+"              "+s.getGender()+"      "+ s.getSeatNumber()+   "+");
 
 		 });
 		 

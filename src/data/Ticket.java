@@ -17,28 +17,28 @@ public class Ticket implements Serializable{
 	private String to;
 	private int pnrNumber;
 	private List<Passenger> passengersList=new ArrayList<>();
-	private String start;
-	private String end;
-	private String preference;
+//	private String start;
+//	private String end;
+//	private String preference;
 	
-	public String getPreference() {
-		return preference;
-	}
-	public void setPreference(String preference) {
-		this.preference = preference;
-	}
-	public String getStart() {
-		return start;
-	}
-	public void setStart(String start) {
-		this.start = start;
-	}
-	public String getEnd() {
-		return end;
-	}
-	public void setEnd(String end) {
-		this.end = end;
-	}
+//	public String getPreference() {
+//		return preference;
+//	}
+//	public void setPreference(String preference) {
+//		this.preference = preference;
+//	}
+//	public String getStart() {
+//		return start;
+//	}
+//	public void setStart(String start) {
+//		this.start = start;
+//	}
+//	public String getEnd() {
+//		return end;
+//	}
+//	public void setEnd(String end) {
+//		this.end = end;
+//	}
 	public String getTrainName() {
 		return trainName;
 	}

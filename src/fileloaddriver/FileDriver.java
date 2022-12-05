@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.util.Map;
 
 import customexception.CustomException;
+import data.Passenger;
 import data.Ticket;
 import data.User;
 import fileinterface.PersistentLayerPathway;
@@ -80,6 +81,14 @@ public class FileDriver implements PersistentLayerPathway{
 		updateFile(fileName,bookingDetails);
 	}
 	
+	public void saveRACDetails(Map<Integer, Passenger> racDetails) throws CustomException {
+		// TODO Auto-generated method stub
+		
+		String fileName="RACDetails_RailwayReservation.ser";
+		
+		updateFile(fileName,racDetails);
+	}
+	
 	@Override
 	public void setPNRNumber(int pnrNumber) throws CustomException {
 		// TODO Auto-generated method stub
@@ -105,6 +114,15 @@ public class FileDriver implements PersistentLayerPathway{
 		String fileName="BookingDetails_RailwayReservation.ser";
 		
 		return (Map<Integer, Ticket>) getFromFile(fileName);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<Integer, Passenger> getRACDetails() throws CustomException {
+		// TODO Auto-generated method stub
+		
+		String fileName="RACDetails_RailwayReservation.ser";
+		
+		return (Map<Integer, Passenger>) getFromFile(fileName);
 	}
 
 	@Override
