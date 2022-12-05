@@ -1,6 +1,7 @@
 package runner;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import customexception.CustomException;
@@ -12,33 +13,35 @@ public class Dummy {
 
 	public static void main(String[] args) {
 		FileDriver file=new FileDriver();
-		Map<Integer,Passenger> map=new LinkedHashMap<>();
-		
-		Passenger passenger=new Passenger();
-		passenger.setAge(21);
-		passenger.setGender("M");
-		passenger.setName("main");
-		passenger.setPreference("RAC");
-		passenger.setSeatNumber("RAC1");
-		
-		map.put(202210, passenger);
-		
+//		List<Passenger> map=new ArrayList<>();
+//		
+//		Passenger passenger=new Passenger();
+//		passenger.setAge(21);
+//		passenger.setGender("M");
+//		passenger.setName("main");
+//		passenger.setPreference("RAC");
+//		passenger.setSeatNumber("RAC1");
+//		passenger.setPnrNumber(2020100);
+//		
+//		map.add(passenger);
+//		
+//		try {
+//			file.saveRACDetails(map);
+//		} catch (CustomException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		Map<Integer,Ticket> map1 = null;
 		try {
-			file.saveRACDetails(map);
-		} catch (CustomException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Map<Integer,Passenger> map1 = null;
-		try {
-			map1=file.getRACDetails();
+			map1=file.getBookingDetails();
 		} catch (CustomException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		map1.forEach((k,v)->{
-			System.out.println(v.getSeatNumber());
+			System.out.println(k);
 		});
+		
 	}
 }

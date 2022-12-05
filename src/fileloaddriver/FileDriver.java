@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.List;
 import java.util.Map;
 
 import customexception.CustomException;
@@ -45,6 +46,7 @@ public class FileDriver implements PersistentLayerPathway{
 		}
 	}
 	
+	
 	private Object getFromFile(String fileName) throws CustomException  {
 		
 		Object map = null;
@@ -81,14 +83,28 @@ public class FileDriver implements PersistentLayerPathway{
 		updateFile(fileName,bookingDetails);
 	}
 	
-	public void saveRACDetails(Map<Integer, Passenger> racDetails) throws CustomException {
+	public void saveRACDetails(List<Passenger> racDetails) throws CustomException {
 		// TODO Auto-generated method stub
 		
 		String fileName="RACDetails_RailwayReservation.ser";
 		
-		updateFile(fileName,racDetails);
+		updateRACFile(fileName,racDetails);
 	}
 	
+	private void updateRACFile(String fileName, List<Passenger> racDetails) throws CustomException {
+		// TODO Auto-generated method stub
+		try(FileOutputStream fileWrite=new FileOutputStream(fileName);
+				ObjectOutputStream objectOutputStream=new ObjectOutputStream(fileWrite);){
+				
+				objectOutputStream.writeObject(racDetails);
+				
+			} catch (FileNotFoundException e) {
+				throw new CustomException("The given file name is not found",e);
+			} catch (IOException e) {
+				throw new CustomException("The given file caused IO exception",e);
+			}
+	}
+
 	@Override
 	public void setPNRNumber(int pnrNumber) throws CustomException {
 		// TODO Auto-generated method stub
@@ -117,12 +133,12 @@ public class FileDriver implements PersistentLayerPathway{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Map<Integer, Passenger> getRACDetails() throws CustomException {
+	public List<Passenger> getRACDetails() throws CustomException {
 		// TODO Auto-generated method stub
 		
 		String fileName="RACDetails_RailwayReservation.ser";
 		
-		return (Map<Integer, Passenger>) getFromFile(fileName);
+		return (List<Passenger>) getFromFile(fileName);
 	}
 
 	@Override
@@ -134,6 +150,5 @@ public class FileDriver implements PersistentLayerPathway{
 	}
 
 
-	
 	
 }

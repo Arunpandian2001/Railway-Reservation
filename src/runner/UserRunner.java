@@ -110,10 +110,13 @@ public class UserRunner {
 		
 		logger.info("Enter the number of passengers ");
 		passengers=input.isInteger();
-		if(Train.total-passengers<0) {
+		if(Train.total-passengers<=0) {
 			logger.warning("Insufficient tickets for required number of passengers");
 			return null;
 		}
+		
+		Storage.VALUES.updatePnrNumber(Storage.VALUES.getPnrNumber()+1);
+		int pnrNumber=Storage.VALUES.getPnrNumber();
 		
 		List<Passenger> passengersList=new ArrayList<>();
 		for(int i=0;i<passengers;i++) {
@@ -139,16 +142,41 @@ public class UserRunner {
 					if((pref.equalsIgnoreCase("U") || pref.equalsIgnoreCase("M") )) {
 						preferenceLoop=false;
 					}
-				}else if(Train.upper>0) {
+				}else if(Train.upper>0 && Train.lower>0) {
+					logger.info("Available Preference  (Upper - U | Lower - L)::");
+					pref=input.getString();
+					if((pref.equalsIgnoreCase("U") || pref.equalsIgnoreCase("L") )) {
+						preferenceLoop=false;
+					}
+				}else if(Train.middle>0 && Train.lower>0) {
+					logger.info("Available Preference  (Mddle - M | Lower - L)::");
+					pref=input.getString();
+					if((pref.equalsIgnoreCase("M") || pref.equalsIgnoreCase("L") )) {
+						preferenceLoop=false;
+					}
+				}else if(Train.upper>0 ) {
 					logger.info("Available Preference  (Upper - U )::");
 					pref=input.getString();
 					if((pref.equalsIgnoreCase("U"))) {
+						preferenceLoop=false;
+					}
+				}else if(Train.lower>0) {
+					logger.info("Available Preference  (Lower - L)::");
+					pref=input.getString();
+					if((pref.equalsIgnoreCase("L") )) {
+						preferenceLoop=false;
+					}
+				}else if(Train.middle>0 ) {
+					logger.info("Available Preference  (Middle - M )::");
+					pref=input.getString();
+					if((pref.equalsIgnoreCase("M"))) {
 						preferenceLoop=false;
 					}
 				}else if(Train.rac>0) {
 					logger.info("Rac is allocated");
 					pref="RAC";
 					preferenceLoop=false;
+					
 				}else {
 					logger.warning("No tickets Available");
 					preferenceLoop=false;
@@ -158,6 +186,12 @@ public class UserRunner {
 			countTickets(pref);
 			pass.setPreference(pref);
 			pass.setSeatNumber(allocateSeatNumber(pref));
+			pass.setPnrNumber(pnrNumber);
+			if(pass.getPreference().equals("RAC")) {
+				List<Passenger> passenger=Storage.VALUES.getRacDetails();
+				passenger.add(pass);
+				Storage.VALUES.updateRACDetails(passenger);
+			}
 			passengersList.add(pass);
 		}
 		String classType="";
@@ -182,8 +216,6 @@ public class UserRunner {
 				}
 			}
 		}
-		Storage.VALUES.updatePnrNumber(Storage.VALUES.getPnrNumber()+1);
-		int pnrNumber=Storage.VALUES.getPnrNumber();
 		
 		Ticket ticket=new Ticket();
 		
@@ -203,16 +235,16 @@ public class UserRunner {
 	private String allocateSeatNumber(String pref) {
 		// TODO Auto-generated method stub
 		if(pref.equalsIgnoreCase("L")) {
-			return "L"+(5-Train.lower);
+			return "L"+(Train.total/4-Train.lower);
 		}
 		else if(pref.equalsIgnoreCase("M")) {
-			return "M"+(5-Train.middle);
+			return "M"+(Train.total/4-Train.middle);
 		}
 		else if(pref.equalsIgnoreCase("U")) {
-			return "U"+(5-Train.upper);
+			return "U"+(Train.total/4-Train.upper);
 		}
 		else if(pref.equalsIgnoreCase("RAC")) {
-			return "RAC"+(5-Train.rac);
+			return "RAC"+(Train.total/4-Train.rac);
 		} 
 		return null;
 	}
@@ -220,19 +252,19 @@ public class UserRunner {
 	private void countTickets(String pref) {
 		if(pref.equalsIgnoreCase("L") && Train.lower>0) {
 			Train.lower--;
-			Train.total--;
+			Train.remaining--;
 		}
 		else if(pref.equalsIgnoreCase("M") && Train.middle>0) {
 			Train.middle--;
-			Train.total--;
+			Train.remaining--;
 		}
 		else if(pref.equalsIgnoreCase("U") && Train.upper>0) {
 			Train.upper--;
-			Train.total--;
+			Train.remaining--;
 		}
 		else if(pref.equalsIgnoreCase("RAC") && Train.rac>0) {
 			Train.rac--;
-			Train.total--;
+			Train.remaining--;
 		}
 	}
 	

@@ -10,7 +10,15 @@ public class Passenger implements Serializable{
 	private String gender;
 	private String preference; 
 	private String seatNumber;
+	private int pnrNumber;
 	
+	
+	public int getPnrNumber() {
+		return pnrNumber;
+	}
+	public void setPnrNumber(int pnrNumber) {
+		this.pnrNumber = pnrNumber;
+	}
 	public String getSeatNumber() {
 		return seatNumber;
 	}

@@ -6,7 +6,8 @@ public class Train implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	public static int total=20;
+	public static int total=4;
+	public static int remaining=4;
 	public static int upper=total/4;
 	public static int lower=total/4;
 	public static int middle=total/4;
